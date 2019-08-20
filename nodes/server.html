@@ -1,24 +1,29 @@
 <script type="text/x-red" data-template-name="zway-server">
     <div class="form-row">
-        <label for="node-config-input-name" class="l-width"><i class="icon-bookmark"></i> <span data-i18n="label.name"></span></label>
+        <label for="node-config-input-name" class="l-width"><i class="icon-bookmark"></i>Name</span></label>
         <input type="text" id="node-config-input-name">
     </div>
     <div class="form-row">
-        <label for="node-config-input-ip" class="l-width"><i class="icon-globe"></i> <span data-i18n="label.ip"></span></label>
+        <label for="node-config-input-ip" class="l-width"><i class="icon-globe"></i>IP</span></label>
         <input type="text" id="node-config-input-ip">
     </div>
-    <div class="form-row">
+    <!-- <div class="form-row">
         <label for="node-config-input-port" class="l-width"><i class="icon-tag"></i> <span data-i18n="label.port"></span></label>
         <input type="text" id="node-config-input-port">
-    </div>
+    </div> -->
     <div class="form-row">
-        <label for="node-config-input-login" class="l-width"><i class="icon-lock"></i> <span data-i18n="label.login"></span></label>
+        <label for="node-config-input-login" class="l-width"><i class="icon-lock"></i> User </span></label>
         <input type="text" id="node-config-input-login">
     </div>
     <div class="form-row">
-        <label for="node-config-input-pass" class="l-width"><i class="icon-lock"></i> <span data-i18n="label.pass"></span></label>
+        <label for="node-config-input-pass" class="l-width"><i class="icon-lock"></i> Password</span></label>
         <input type="text" id="node-config-input-pass">
     </div>
+    <div class="form-row">
+        <label for="node-config-input-secure" class="l-width"><i class="icon-tag"></i> SSL</label>
+        <input type="checkbox" id="node-config-input-secure" style="display: inline-block; width: auto; vertical-align: top;"> <span data-i18n="label.use_secured_ssl"></span></input>
+    </div>
+	<div class="form-tips" data-i18n="[html]tip.deploy"></div>
 </script>
 
 <script type='text/javascript'>
