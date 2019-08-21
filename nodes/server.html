@@ -1,4 +1,6 @@
 <script type="text/x-red" data-template-name="zway-server">
+    <link rel="stylesheet" href="zway/static/css/common.css" type="text/css" />
+
     <div class="form-row">
         <label for="node-config-input-name" class="l-width"><i class="icon-bookmark"></i>Name</span></label>
         <input type="text" id="node-config-input-name">
@@ -49,6 +51,10 @@
             },
             pass: {
                 value: null,
+                required: true
+            },
+            secure: {
+                value: false,
                 required: true
             }
         },

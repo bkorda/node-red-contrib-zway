@@ -8,10 +8,12 @@ module.exports = function(RED) {
 
             var node = this;
 
+            node.items = undefined;
+            node.items_list = undefined;
             node.discoverProcess = false;
             node.name = n.name;
             node.ip = n.ip;
-            node.port = n.port;
+            node.port = 8083;
             node.login = n.login;
             node.pass = n.pass;
             node.secure = n.secure || false;
@@ -38,12 +40,62 @@ module.exports = function(RED) {
             node.discoverDevices(function(){}, true);
 
             this.refreshDiscoverTimer = setInterval(function () {
-                node.discoverDevices(function(){}, true);
+                node.discoverDevices(function(devices){
+                    node.log("items: " + devices);
+                }, true);
             }, node.refreshDiscoverInterval);
         }
 
         discoverDevices(callback, forceRefresh = false) {
+            var node = this;
 
+            if (forceRefresh || node.items === undefined) {
+                node.discoverProcess = true;
+
+                var url = "http://" + node.ip + ":" + node.port + "/ZAutomation/api/v1/devices";
+  
+                request.get(url, function (error, result, data) {
+                    
+                    if (error) {
+                        node.discoverProcess = false;
+                        callback(false);
+                        return;
+                    }
+
+                    try {
+                        var dataParsed = JSON.parse(data);
+                    } catch (e) {
+                        node.discoverProcess = false;
+                        callback(false);
+                        return;
+                    }
+
+                    node.oldItemsList = node.items !== undefined ? node.items : undefined;
+                    node.items = [];
+
+                    if (dataParsed) {
+                        node.log(dataParsed);
+                        for (var index in dataParsed.data.devices) {
+                            var prop = dataParsed.data.devices[index];
+                            prop.device_id = parseInt(index);
+
+                            node.items[prop.id] = prop;
+
+                            if (node.oldItemsList !== undefined && prop.id in node.oldItemsList) {} else {
+                                node.emit("onNewDevice", prop.id);
+                            }
+                        }
+                    }
+
+                    node.discoverProcess = false;
+                    callback(node.items);
+                    return node.items;
+                }).auth(node.login, node.pass);
+            } else {
+                node.log('discoverDevices: Using cached devices');
+                callback(node.items);
+                return node.items;
+            }
         }
 
         getDiscoverProcess() {
@@ -52,11 +104,38 @@ module.exports = function(RED) {
         }
 
         getDevice(uniqueid) {
-            
+            var node = this;
+            var result = false;
+
+            if (node.items !== undefined && node.items) {
+                for (var index in (node.items)) {
+                    var item = (node.items)[index];
+                    if (index === uniqueid) {
+                        result = item;
+                        break;
+                    }
+                }
+            }
+            return result;
         }
 
         getItemsList(callback, forceRefresh = false) {
-            
+            var node = this;
+            node.discoverDevices(function(items){
+                node.items_list = [];
+                for (var index in items) {
+                    var prop = items[index];
+
+                    node.items_list.push({
+                        device_name: prop.name.metrics.title,
+                        uniqueid: prop.id,
+                        meta: prop
+                    });
+                }
+
+                callback(node.items_list);
+                return node.items_list;
+            }, forceRefresh);
         }
 
         onClose() {
