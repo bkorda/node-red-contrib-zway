@@ -40,9 +40,7 @@ module.exports = function(RED) {
             node.discoverDevices(function(){}, true);
 
             this.refreshDiscoverTimer = setInterval(function () {
-                node.discoverDevices(function(devices){
-                    node.log("items: " + devices);
-                }, true);
+                node.discoverDevices(function(){}, true);
             }, node.refreshDiscoverInterval);
         }
 
@@ -74,13 +72,11 @@ module.exports = function(RED) {
                     node.items = [];
 
                     if (dataParsed) {
-                        node.log(dataParsed);
                         for (var index in dataParsed.data.devices) {
                             var prop = dataParsed.data.devices[index];
-                            prop.device_id = parseInt(index);
-
-                            node.items[prop.id] = prop;
-
+                            // prop.device_id = parseInt(index);
+                            node.items[index] = prop;
+                            
                             if (node.oldItemsList !== undefined && prop.id in node.oldItemsList) {} else {
                                 node.emit("onNewDevice", prop.id);
                             }
@@ -125,9 +121,9 @@ module.exports = function(RED) {
                 node.items_list = [];
                 for (var index in items) {
                     var prop = items[index];
-
+                    
                     node.items_list.push({
-                        device_name: prop.name.metrics.title,
+                        device_name: prop.metrics.title,
                         uniqueid: prop.id,
                         meta: prop
                     });
@@ -182,8 +178,35 @@ module.exports = function(RED) {
 
         onSocketMessage(dataParsed) {
             var that = this;
-            that.log(dataParsed);
             that.emit('onSocketMessage', dataParsed);
+
+            for (var nodeId in this.devices) {
+                var item = this.devices[nodeId];
+                var node = RED.nodes.getNode(nodeId);
+
+                if (dataParsed.uniqueid === item) {
+                    if (node && "server" in node) {
+                        //update server items db
+                        var serverNode = RED.nodes.getNode(node.server.id);
+                        if ("items" in serverNode && dataParsed.uniqueid in serverNode.items) {
+                            serverNode.items[dataParsed.uniqueid].state = dataParsed.state;
+
+                            if (node.type === "zway-input") {
+                                // console.log(dataParsed);
+                                node.sendState(dataParsed);
+                            }
+                        }
+                    } else {
+                        console.log('ERROR: cant get '+nodeId+' node, removed from list');
+                        delete node.devices[nodeId];
+
+                        if ("server" in node) {
+                            var serverNode = RED.nodes.getNode(node.server.id);
+                            delete serverNode.items[dataParsed.uniqueid];
+                        }
+                    }
+                }
+            }
         }
     }
 

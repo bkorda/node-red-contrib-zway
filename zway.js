@@ -22,9 +22,9 @@ module.exports = function (RED) {
         var forceRefresh = config.forceRefresh ? ['1', 'yes', 'true'].includes(config.forceRefresh.toLowerCase()) : false;
 
         if (controller && controller.constructor.name === "ServerNode") {
-            controller.getItemsList(function (items, groups) {
+            controller.getItemsList(function (items) {
                 if (items) {
-                    res.json({items:items, groups:groups});
+                    res.json({items:items});
                 } else {
                     res.status(404).end();
                 }
@@ -34,20 +34,20 @@ module.exports = function (RED) {
         }
     });
 
-    RED.httpAdmin.get(NODE_PATH + 'statelist', function (req, res) {
-        var config = req.query;
-        var controller = RED.nodes.getNode(config.controllerID);
-        if (controller && controller.constructor.name === "ServerNode") {
-            var item = controller.getDevice(config.uniqueid);
-            if (item) {
-                res.json(item.state);
-            } else {
-                res.status(404).end();
-            }
-        } else {
-            res.status(404).end();
-        }
-    });
+    // RED.httpAdmin.get(NODE_PATH + 'statelist', function (req, res) {
+    //     var config = req.query;
+    //     var controller = RED.nodes.getNode(config.controllerID);
+    //     if (controller && controller.constructor.name === "ServerNode") {
+    //         var item = controller.getDevice(config.uniqueid);
+    //         if (item) {
+    //             res.json(item.state);
+    //         } else {
+    //             res.status(404).end();
+    //         }
+    //     } else {
+    //         res.status(404).end();
+    //     }
+    // });
     // RED.httpAdmin.get(NODE_PATH + 'gwscanner', function (req, res) {
     //     // var ip = require("ip");
     //     // console.log ( ip.address() );
