@@ -106,7 +106,7 @@ module.exports = function(RED) {
             if (node.items !== undefined && node.items) {
                 for (var index in (node.items)) {
                     var item = (node.items)[index];
-                    if (index === uniqueid) {
+                    if (item.id === uniqueid) {
                         result = item;
                         break;
                     }
