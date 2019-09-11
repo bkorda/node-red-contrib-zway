@@ -114,13 +114,7 @@
                 this.device = selectedOptions.map(function () {
                     return $(this).val();
                 });
-
-                console.log("DEVICE:")
-                console.log(this.device);
-
                 this.device_name = zway_filterDeviceName(selectedOptions.text());
-                console.log("DEVICE NAME:")
-                console.log(this.device_name);
             } else {
                 this.device_name = this.device = null;
             }

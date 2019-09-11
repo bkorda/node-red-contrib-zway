@@ -73,12 +73,12 @@ module.exports = function(RED) {
 
                     if (dataParsed) {
                         for (var index in dataParsed.data.devices) {
-                            var prop = dataParsed.data.devices[index];
+                            var device = dataParsed.data.devices[index];
                             // prop.device_id = parseInt(index);
-                            node.items[index] = prop;
+                            node.items[index] = device;
                             
-                            if (node.oldItemsList !== undefined && prop.id in node.oldItemsList) {} else {
-                                node.emit("onNewDevice", prop.id);
+                            if (node.oldItemsList !== undefined && device.id in node.oldItemsList) {} else {
+                                node.emit("onNewDevice", device.id);
                             }
                         }
                     }
@@ -101,7 +101,7 @@ module.exports = function(RED) {
 
         getDevice(uniqueid) {
             var node = this;
-            var result = false;
+            var result = undefined;
 
             if (node.items !== undefined && node.items) {
                 for (var index in (node.items)) {
@@ -120,12 +120,12 @@ module.exports = function(RED) {
             node.discoverDevices(function(items){
                 node.items_list = [];
                 for (var index in items) {
-                    var prop = items[index];
+                    var device = items[index];
                     
                     node.items_list.push({
-                        device_name: prop.metrics.title,
-                        uniqueid: prop.id,
-                        meta: prop
+                        device_name: device.metrics.title,
+                        uniqueid: device.id,
+                        meta: device
                     });
                 }
 
@@ -184,16 +184,16 @@ module.exports = function(RED) {
                 var item = this.devices[nodeId];
                 var node = RED.nodes.getNode(nodeId);
 
-                if (dataParsed.uniqueid === item) {
+                if (dataParsed.id === item.id) {
                     if (node && "server" in node) {
                         //update server items db
                         var serverNode = RED.nodes.getNode(node.server.id);
-                        if ("items" in serverNode && dataParsed.uniqueid in serverNode.items) {
-                            serverNode.items[dataParsed.uniqueid].state = dataParsed.state;
-
+                        if ("items" in serverNode) { //} && dataParsed.id in serverNode.items) {
+                            // serverNode.items[dataParsed.id].state = dataParsed.state;
+                                
                             if (node.type === "zway-input") {
                                 // console.log(dataParsed);
-                                node.sendState(dataParsed);
+                                node.sendMetrics(dataParsed);
                             }
                         }
                     } else {
