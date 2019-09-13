@@ -181,10 +181,10 @@ module.exports = function(RED) {
             that.emit('onSocketMessage', dataParsed);
 
             for (var nodeId in this.devices) {
-                var item = this.devices[nodeId];
+                var itemID = this.devices[nodeId];
                 var node = RED.nodes.getNode(nodeId);
 
-                if (dataParsed.id === item.id) {
+                if (dataParsed.source === itemID) {
                     if (node && "server" in node) {
                         //update server items db
                         var serverNode = RED.nodes.getNode(node.server.id);

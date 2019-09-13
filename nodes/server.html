@@ -19,12 +19,12 @@
     </div>
     <div class="form-row">
         <label for="node-config-input-pass" class="l-width"><i class="icon-lock"></i> Password</span></label>
-        <input type="text" id="node-config-input-pass">
+        <input type="password" id="node-config-input-pass">
     </div>
-    <div class="form-row">
+    <!-- <div class="form-row">
         <label for="node-config-input-secure" class="l-width"><i class="icon-tag"></i> SSL</label>
         <input type="checkbox" id="node-config-input-secure" style="display: inline-block; width: auto; vertical-align: top;"> <span data-i18n="label.use_secured_ssl"></span></input>
-    </div>
+    </div> -->
 	<div class="form-tips" data-i18n="[html]tip.deploy"></div>
 </script>
 
@@ -52,11 +52,11 @@
             pass: {
                 value: null,
                 required: true
-            },
-            secure: {
-                value: false,
-                required: true
             }
+            // secure: {
+            //     value: false,
+            //     required: true
+            // }
         },
         label: function() {
             return this.name ||  this.ip+':'+this.port;

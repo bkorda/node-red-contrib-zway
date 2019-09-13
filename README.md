@@ -1,12 +1,8 @@
-# node-red-contrib-deconz
-Node-Red Nodes for deCONZ connectivity.
+# node-red-contrib-zway
+Node-Red Nodes for Z-Wat connectivity.
 
 Available nodes are:
-* deconz-in: A node to subscribe to deCONZ devices
-* deconz-get: get state of device or group
-* deconz-out: send data to device or group
-* deconz-battery: get battery status of device
-* deconz-event: get all deconz events
+* deconz-in: A node to subscribe to Z-Way devices
 
 
 <img src="https://github.com/andreypopov/node-red-contrib-deconz/blob/master/readme/1.png?raw=true">

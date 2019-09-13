@@ -41,7 +41,7 @@ module.exports = function(RED) {
                     } else {
                         setTimeout(function () {
                             node.status({}); //clean
-                            node.getState(deviceMeta);
+                            node.updateState(deviceMeta);
                             node.sendStateHomekitOnly(deviceMeta); //always send for homekit
                         }, 1500); //update status with the same delay
                     }
@@ -49,37 +49,39 @@ module.exports = function(RED) {
                     node.status({
                         fill: "red",
                         shape: "dot",
-                        text: "node-red-contrib-deconz/in:status.disconnected"
+                        text: "node-red-contrib-zway/in:status.disconnected"
                     });
                 }
             } else {
                 node.status({
                     fill: "red",
                     shape: "dot",
-                    text: "node-red-contrib-deconz/in:status.device_not_set"
+                    text: "node-red-contrib-zway/in:status.device_not_set"
                 });
             }
         }
 
-        getState(device) {
+        updateState(device) {
             var node = this;
 
             node.status({
                 fill: "green",
                 shape: "dot",
-                text: "node-red-contrib-deconz/in:status.connected"
+                text: "node-red-contrib-zway/in:status.connected"
             });
 
-            if (node.oldLevel === undefined && device.metrics.level) { node.oldLevel = device.metrics.level; }
-            if (node.prevUpdateTime === undefined && device.updateTime) { node.prevUpdateTime = device.updateTime; }
-            return(device);
+            if (device.metrics !== undefined) {
+                if (node.oldLevel === undefined && device.metrics.level) { node.oldLevel = device.metrics.level; }
+                if (node.prevUpdateTime === undefined && device.updateTime) { node.prevUpdateTime = device.updateTime; }
+            } else {
+                if (node.oldLevel === undefined && device.message.l) { node.oldLevel = device.message.l; }
+                //if (node.prevUpdateTime === undefined && device.updateTime) { node.prevUpdateTime = device.updateTime; }
+            }
         }
 
         sendMetrics(device, force=false) {
             var node = this;
-            device = node.getState(device);
-            if(!device) { return; }
-
+            node.updateState(device);
             //filter output
             if (!force && 'onchange' === node.config.output && device.metrics.level === node.oldState) return;
             if (!force && 'onupdate' === node.config.output && device.updateTime === node.prevUpdateTime) return;
@@ -87,11 +89,11 @@ module.exports = function(RED) {
             //outputs
             node.send([
                 {
-                    payload: device.metrics,//(node.config.state in device.metrics) ? device.metrics.lvl : device.metrics,
+                    payload: device.message,//(node.config.state in device.metrics) ? device.metrics.lvl : device.metrics,
                     payload_raw: device,
                     meta: node.server.getDevice(node.config.device)
-                },
-                node.formatHomeKit(device)
+                }
+                // node.formatHomeKit(device)
             ]);
 
             // node.oldState = device.state[node.config.state];
@@ -100,13 +102,12 @@ module.exports = function(RED) {
 
         sendStateHomekitOnly(device) {
             var node = this;
-            device = node.getState(device);
-            if(!device) { return; }
+            node.updateState(device);
 
             //outputs
             node.send([
-                null,
-                node.formatHomeKit(device)
+                null
+                // node.formatHomeKit(device)
             ]);
         }
 
@@ -263,7 +264,7 @@ module.exports = function(RED) {
 
             // msg.payload = characteristic;
             // return msg;
-            return device.metrics;
+            return device;
         }
 
 
@@ -277,7 +278,7 @@ module.exports = function(RED) {
             node.status({
                 fill: "yellow",
                 shape: "dot",
-                text: "node-red-contrib-deconz/in:status.reconnecting"
+                text: "node-red-contrib-zway/in:status.reconnecting"
             });
 
             //send NO_RESPONSE
@@ -300,7 +301,7 @@ module.exports = function(RED) {
             node.status({
                 fill: "red",
                 shape: "dot",
-                text: "node-red-contrib-deconz/in:status.disconnected"
+                text: "node-red-contrib-zway/in:status.disconnected"
             });
         }
 

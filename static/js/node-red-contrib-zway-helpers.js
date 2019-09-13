@@ -149,14 +149,14 @@ function zway_getItemStateList(nodeItem, selectedItemElementName, options = {}) 
 
         var uniqueId = $('#node-input-device').val();
         if (controller && uniqueId) {
-            $.getJSON('deconz/statelist', {
+            $.getJSON('zway/statelist', {
                 controllerID: controller.id,
                 uniqueid:uniqueId
             })
                 .done(function (data, textStatus, jqXHR) {
                     try {
 
-                        selectedItemElement.html('<option value="0">'+ RED._("node-red-contrib-deconz/in:multiselect.complete_payload")+'</option>');
+                        selectedItemElement.html('<option value="0">'+ RED._("node-red-contrib-zway/in:multiselect.complete_payload")+'</option>');
 
 
                         $.each(data, function(index, value) {
@@ -208,7 +208,7 @@ function zway_getItemStateList(nodeItem, selectedItemElementName, options = {}) 
         maxHeight: 300,
         disableIfEmpty: true,
         nSelectedText: 'selected',
-        nonSelectedText: RED._("node-red-contrib-deconz/in:multiselect.complete_payload"),
+        nonSelectedText: RED._("node-red-contrib-zway/in:multiselect.complete_payload"),
         buttonWidth: '70%',
     });
 
