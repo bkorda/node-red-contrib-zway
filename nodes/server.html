@@ -1,40 +1,35 @@
-<script type="text/x-red" data-template-name="deconz-server">
-    <link rel="stylesheet" href="deconz/static/css/common.css" type="text/css" />
+<script type="text/x-red" data-template-name="zway-server">
+    <link rel="stylesheet" href="zway/static/css/common.css" type="text/css" />
 
     <div class="form-row">
-        <label for="node-config-input-name" class="l-width"><i class="icon-bookmark"></i> <span data-i18n="label.name"></span></label>
+        <label for="node-config-input-name" class="l-width"><i class="icon-bookmark"></i>Name</span></label>
         <input type="text" id="node-config-input-name">
     </div>
     <div class="form-row">
-        <label for="node-config-input-ip" class="l-width"><i class="icon-globe"></i> <span data-i18n="label.ip_address"></span></label>
+        <label for="node-config-input-ip" class="l-width"><i class="icon-globe"></i>IP</span></label>
         <input type="text" id="node-config-input-ip">
     </div>
-    <div class="form-row">
+    <!-- <div class="form-row">
         <label for="node-config-input-port" class="l-width"><i class="icon-tag"></i> <span data-i18n="label.port"></span></label>
         <input type="text" id="node-config-input-port">
+    </div> -->
+    <div class="form-row">
+        <label for="node-config-input-login" class="l-width"><i class="icon-lock"></i> User </span></label>
+        <input type="text" id="node-config-input-login">
     </div>
     <div class="form-row">
-        <label for="node-config-input-apikey" class="l-width"><i class="icon-lock"></i> <span data-i18n="label.api_key"></span></label>
-        <input type="text" id="node-config-input-apikey">
+        <label for="node-config-input-pass" class="l-width"><i class="icon-lock"></i> Password</span></label>
+        <input type="password" id="node-config-input-pass">
     </div>
-        <div class="form-row">
-        <label for="node-config-input-ws_port" class="l-width"><i class="icon-tag"></i> <span data-i18n="label.websocket_port"></span></label>
-        <input type="text" id="node-config-input-ws_port">
-    </div>
-    <div class="form-row">
+    <!-- <div class="form-row">
         <label for="node-config-input-secure" class="l-width"><i class="icon-tag"></i> SSL</label>
         <input type="checkbox" id="node-config-input-secure" style="display: inline-block; width: auto; vertical-align: top;"> <span data-i18n="label.use_secured_ssl"></span></input>
-    </div>
-    <div class="form-row">
-        <label for="force-refresh" class="l-width"><i class="fa fa-refresh"></i> <span data-i18n="label.magick"></span></label>
-        <button type="button" style="width: 70%" class="btn btn-light" id="force-refresh" name="force-refresh"><span data-i18n="label.get_settings"></span></button>
-	</div>
+    </div> -->
 	<div class="form-tips" data-i18n="[html]tip.deploy"></div>
-
 </script>
 
 <script type='text/javascript'>
-    RED.nodes.registerType('deconz-server', {
+    RED.nodes.registerType('zway-server', {
         category: 'config',
         defaults: {
             name: {
@@ -47,44 +42,25 @@
             },
             port: {
                 value: '80',
-                required: true
+                required: true,
+                validate:RED.validators.number()
             },
-            apikey: {
+            login: {
                 value: null,
                 required: true
             },
-            ws_port: {
-                value: '443',
-                required: true
-            },
-            secure: {
-                value: false,
+            pass: {
+                value: null,
                 required: true
             }
+            // secure: {
+            //     value: false,
+            //     required: true
+            // }
         },
         label: function() {
             return this.name ||  this.ip+':'+this.port;
-        },
-        oneditprepare: function () {
-            var node = this;
-            var $refreshBtn = $('#force-refresh');
-
-            $refreshBtn.on('click', function(){
-                var currentSettings = {
-                    name:$('#node-config-input-name').val(),
-                    ip:$('#node-config-input-ip').val(),
-                    port:$('#node-config-input-port').val(),
-                };
-
-                deconz_initSettings(function(settings){
-                    if (settings.name) $('#node-config-input-name').val(settings.name);
-                    if (settings.ip) $('#node-config-input-ip').val(settings.ip);
-                    if (settings.port) $('#node-config-input-port').val(settings.port);
-                    if (settings.apikey) $('#node-config-input-apikey').val(settings.apikey);
-                    if (settings.ws_port) $('#node-config-input-ws_port').val(settings.ws_port);
-                }, currentSettings);
-            });
-        },
+        }
     });
 </script>
 

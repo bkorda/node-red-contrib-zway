@@ -4,7 +4,7 @@
     "email": "b.korda@hotmail.com"
   },
   "bugs": {
-    "url": "https://github.com/bkorda/node-red-contrib-z-way/issues/"
+    "url": "https://github.com/bkorda/node-red-contrib-zway/issues/"
   },
   "dependencies": {
     "bootstrap-multiselect": "latest",
@@ -12,30 +12,24 @@
     "ws": "latest",
     "events": "latest"
   },
-  "description": "deCONZ connectivity nodes for node-red",
-  "homepage": "https://github.com/bkorda/node-red-contrib-z-way",
+  "description": "Z-Way connectivity nodes for node-red",
+  "homepage": "https://github.com/bkorda/node-red-contrib-zway",
   "keywords": [
-    "deconz",
-    "drezden",
-    "conbee",
+    "z-way",
     "node-red"
   ],
   "license": "GPL-3.0",
-  "name": "node-red-contrib-z-way",
+  "name": "node-red-contrib-zway",
   "node-red": {
     "nodes": {
       "in": "nodes/in.js",
-      "get": "nodes/get.js",
-      "out": "nodes/out.js",
-      "event": "nodes/event.js",
-      "battery": "nodes/battery.js",
       "server": "nodes/server.js",
-      "api": "deconz.js"
+      "api": "zway.js"
     }
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bkorda/node-red-contrib-z-way.git"
+    "url": "git+https://github.com/bkorda/node-red-contrib-zway.git"
   },
   "version": "0.0.1"
 }

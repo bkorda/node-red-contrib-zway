@@ -13,27 +13,27 @@ module.exports = function(RED) {
             if (node.server) {
                 if (typeof (node.config.device) == 'string' && node.config.device.length) {
                     var deviceMeta = node.server.getDevice(node.config.device);
-                    if (deviceMeta !== undefined && deviceMeta && "uniqueid" in deviceMeta) {
-                        node.server.devices[node.id] = deviceMeta.uniqueid; //regisgter node in devices list
+                    if (deviceMeta !== undefined && deviceMeta && "id" in deviceMeta) {
+                        node.server.devices[node.id] = deviceMeta.id; //regisgter node in devices list
                     } else {
                         node.status({
                             fill: "red",
                             shape: "dot",
-                            text: "node-red-contrib-deconz/get:status.device_not_set"
+                            text: "node-red-contrib-zway/get:status.device_not_set"
                         });
                     }
                 } else {
                     node.status({
                         fill: "red",
                         shape: "dot",
-                        text: "node-red-contrib-deconz/get:status.device_not_set"
+                        text: "node-red-contrib-zway/get:status.device_not_set"
                     });
                 }
             } else {
                 node.status({
                     fill: "red",
                     shape: "dot",
-                    text: "node-red-contrib-deconz/get:status.server_node_error"
+                    text: "node-red-contrib-zway/get:status.server_node_error"
                 });
             }
 
@@ -45,7 +45,7 @@ module.exports = function(RED) {
                     var deviceMeta = node.server.getDevice(node.config.device);
 
                     if (deviceMeta) {
-                        node.server.devices[node.id] = deviceMeta.uniqueid;
+                        node.server.devices[node.id] = deviceMeta.id;
                         node.meta = deviceMeta;
 
                         //status
@@ -53,19 +53,19 @@ module.exports = function(RED) {
                             node.status({
                                 fill: "red",
                                 shape: "ring",
-                                text: "node-red-contrib-deconz/get:status.not_reachable"
+                                text: "node-red-contrib-zway/get:status.not_reachable"
                             });
                         } else if ("config" in deviceMeta && "reachable" in deviceMeta.config && deviceMeta.config.reachable === false) {
                             node.status({
                                 fill: "red",
                                 shape: "ring",
-                                text: "node-red-contrib-deconz/get:status.not_reachable"
+                                text: "node-red-contrib-zway/get:status.not_reachable"
                             });
                         } else {
                             node.status({
                                 fill: "green",
                                 shape: "dot",
-                                text: (config.state in node.meta.state)?(node.meta.state[config.state]).toString():"node-red-contrib-deconz/get:status.received",
+                                text: (config.state in node.meta.state)?(node.meta.state[config.state]).toString():"node-red-contrib-zway/get:status.received",
                             });
 
                             node.send({
@@ -81,7 +81,7 @@ module.exports = function(RED) {
                         node.status({
                             fill: "red",
                             shape: "dot",
-                            text: "node-red-contrib-deconz/get:status.device_not_set"
+                            text: "node-red-contrib-zway/get:status.device_not_set"
                         });
                     }
 

@@ -25,15 +25,15 @@
 </script>
 
 <script type='text/javascript'>
-    RED.nodes.registerType('deconz-get', {
-        category: 'deCONZ',
-        color: '#f7aa3f',
+    RED.nodes.registerType('zway-get', {
+        category: 'ZWAY',
+        color: '#f6f6f6',
         defaults: {
             name: {
                 value: ""
             },
             server: {
-                type: "deconz-server",
+                type: "zway-server",
                 required: true
             },
             device: {
@@ -51,9 +51,9 @@
         outputs: 1,
         outputLabels: ["state"],
         paletteLabel: 'get',
-        icon: "deconz.png",
+        icon: "zway.png",
         label: function () {
-            var label = 'deconz-get';
+            var label = 'zway-get';
             if (this.name) {
                 label = this.name;
             } else if (typeof(this.device_name) == 'string' && this.device_name.length) {
@@ -69,13 +69,13 @@
             setTimeout(function(){
                 var $deviceInput = $('#node-input-device');
 
-                deconz_getItemList(node.device, '#node-input-device', {allowEmpty:true, groups:true});
+                zway_getItemList(node.device, '#node-input-device', {allowEmpty:true, groups:true});
 
                 $deviceInput.on('change', function(){
-                    deconz_getItemStateList(0, '#node-input-state', {groups:true});
+                    zway_getItemStateList(0, '#node-input-state', {groups:true});
                 });
                 setTimeout(function () {
-                    deconz_getItemStateList(node.state, '#node-input-state', {groups:true});
+                    zway_getItemStateList(node.state, '#node-input-state', {groups:true});
                 },100);
             }, 100); //we need small timeout, too fire change event for server select
 

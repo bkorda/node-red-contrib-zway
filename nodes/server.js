@@ -1,5 +1,5 @@
 var request = require('request');
-const DeconzSocket = require('../lib/deconz-socket');
+const ZWaySocket = require('../lib/zway-socket');
 
 module.exports = function(RED) {
     class ServerNode {
@@ -7,24 +7,24 @@ module.exports = function(RED) {
             RED.nodes.createNode(this, n);
 
             var node = this;
+
             node.items = undefined;
             node.items_list = undefined;
             node.discoverProcess = false;
             node.name = n.name;
             node.ip = n.ip;
-            node.port = n.port;
-            node.ws_port = n.ws_port;
+            node.port = 8083;
+            node.login = n.login;
+            node.pass = n.pass;
             node.secure = n.secure || false;
-            node.apikey = n.apikey;
             node.devices = {};
 
             node.setMaxListeners(255);
             node.refreshDiscoverTimer = null;
             node.refreshDiscoverInterval = 15000;
 
-            node.socket = new DeconzSocket({
+            node.socket = new ZWaySocket({
                 hostname: this.ip,
-                port: this.ws_port,
                 secure: this.secure
             });
 
@@ -44,22 +44,16 @@ module.exports = function(RED) {
             }, node.refreshDiscoverInterval);
         }
 
-
-
-
         discoverDevices(callback, forceRefresh = false) {
             var node = this;
 
             if (forceRefresh || node.items === undefined) {
                 node.discoverProcess = true;
-                // node.log('discoverDevices: Refreshing devices list');
 
-                var url = "http://" + node.ip + ":" + node.port + "/api/" + node.apikey;
-                // node.log('discoverDevices: Requesting: ' + url);
-
-
+                var url = "http://" + node.ip + ":" + node.port + "/ZAutomation/api/v1/devices";
+  
                 request.get(url, function (error, result, data) {
-
+                    
                     if (error) {
                         node.discoverProcess = false;
                         callback(false);
@@ -74,52 +68,25 @@ module.exports = function(RED) {
                         return;
                     }
 
-                    node.oldItemsList = node.items !== undefined?node.items:undefined;
+                    node.oldItemsList = node.items !== undefined ? node.items : undefined;
                     node.items = [];
+
                     if (dataParsed) {
-                        for (var index in dataParsed.sensors) {
-                            var prop = dataParsed.sensors[index];
-                            prop.device_type = 'sensors';
-                            prop.device_id = parseInt(index);
-
-                            if (node.oldItemsList !== undefined && prop.uniqueid  in node.oldItemsList) {} else {
-                                node.items[prop.uniqueid] = prop;
-                                node.emit("onNewDevice", prop.uniqueid);
+                        for (var index in dataParsed.data.devices) {
+                            var device = dataParsed.data.devices[index];
+                            // prop.device_id = parseInt(index);
+                            node.items[index] = device;
+                            
+                            if (node.oldItemsList !== undefined && device.id in node.oldItemsList) {} else {
+                                node.emit("onNewDevice", device.id);
                             }
-                            node.items[prop.uniqueid] = prop;
-                        }
-
-                        for (var index in dataParsed.lights) {
-                            var prop = dataParsed.lights[index];
-                            prop.device_type = 'lights';
-                            prop.device_id = parseInt(index);
-
-                            if (node.oldItemsList !== undefined && prop.uniqueid  in node.oldItemsList) {} else {
-                                node.items[prop.uniqueid] = prop;
-                                node.emit("onNewDevice", prop.uniqueid);
-                            }
-                            node.items[prop.uniqueid] = prop;
-                        }
-
-                        for (var index in dataParsed.groups) {
-                            var prop = dataParsed.groups[index];
-                            prop.device_type = 'groups';
-                            var groupid = "group_" + parseInt(index);
-                            prop.device_id = groupid;
-                            prop.uniqueid = groupid;
-
-                            if (node.oldItemsList !== undefined && prop.uniqueid  in node.oldItemsList) {} else {
-                                node.items[prop.uniqueid] = prop;
-                                node.emit("onNewDevice", prop.uniqueid);
-                            }
-                            node.items[prop.uniqueid] = prop;
                         }
                     }
 
                     node.discoverProcess = false;
                     callback(node.items);
                     return node.items;
-                });
+                }).auth(node.login, node.pass);
             } else {
                 node.log('discoverDevices: Using cached devices');
                 callback(node.items);
@@ -134,11 +101,12 @@ module.exports = function(RED) {
 
         getDevice(uniqueid) {
             var node = this;
-            var result = false;
+            var result = undefined;
+
             if (node.items !== undefined && node.items) {
                 for (var index in (node.items)) {
                     var item = (node.items)[index];
-                    if (index === uniqueid) {
+                    if (item.id === uniqueid) {
                         result = item;
                         break;
                     }
@@ -152,12 +120,12 @@ module.exports = function(RED) {
             node.discoverDevices(function(items){
                 node.items_list = [];
                 for (var index in items) {
-                    var prop = items[index];
-
+                    var device = items[index];
+                    
                     node.items_list.push({
-                        device_name: prop.name + ' : ' + prop.type,
-                        uniqueid: prop.uniqueid,
-                        meta: prop
+                        device_name: device.metrics.title,
+                        uniqueid: device.id,
+                        meta: device
                     });
                 }
 
@@ -212,26 +180,20 @@ module.exports = function(RED) {
             var that = this;
             that.emit('onSocketMessage', dataParsed);
 
-            if (dataParsed.r == "scenes") { return; }
-
-            if (dataParsed.r == "groups") {
-               dataParsed.uniqueid = "group_" + dataParsed.id;
-            }
-
             for (var nodeId in this.devices) {
-                var item = this.devices[nodeId];
+                var itemID = this.devices[nodeId];
                 var node = RED.nodes.getNode(nodeId);
 
-                if (dataParsed.uniqueid === item) {
+                if (dataParsed.source === itemID) {
                     if (node && "server" in node) {
                         //update server items db
                         var serverNode = RED.nodes.getNode(node.server.id);
-                        if ("items" in serverNode && dataParsed.uniqueid in serverNode.items) {
-                            serverNode.items[dataParsed.uniqueid].state = dataParsed.state;
-
-                            if (node.type === "deconz-input") {
+                        if ("items" in serverNode) { //} && dataParsed.id in serverNode.items) {
+                            // serverNode.items[dataParsed.id].state = dataParsed.state;
+                                
+                            if (node.type === "zway-input") {
                                 // console.log(dataParsed);
-                                node.sendState(dataParsed);
+                                node.sendMetrics(dataParsed);
                             }
                         }
                     } else {
@@ -248,6 +210,6 @@ module.exports = function(RED) {
         }
     }
 
-    RED.nodes.registerType('deconz-server', ServerNode, {});
+    RED.nodes.registerType('zway-server', ServerNode);
 };
 
