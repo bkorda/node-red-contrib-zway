@@ -6,6 +6,7 @@ Available nodes are:
 
 To do:
 - [ ] Send commands to devices
+- [ ] Electric meter node
 - [ ] Separate battery node
 - [ ] HomeKit output
 
