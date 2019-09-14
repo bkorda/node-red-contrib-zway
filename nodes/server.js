@@ -189,7 +189,15 @@ module.exports = function(RED) {
                         //update server items db
                         var serverNode = RED.nodes.getNode(node.server.id);
                         if ("items" in serverNode) { //} && dataParsed.id in serverNode.items) {
-                            // serverNode.items[dataParsed.id].state = dataParsed.state;
+                            // update state of device in server node
+                            for (var index in serverNode.items) {
+                                var device = serverNode.items[index];
+                                if (device.id === dataParsed.source) {
+                                    device.metrics.level = dataParsed.message.l
+                                    serverNode.items[index] = device;
+                                    break
+                                }
+                            }
                                 
                             if (node.type === "zway-input") {
                                 // console.log(dataParsed);

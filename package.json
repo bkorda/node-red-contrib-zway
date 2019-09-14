@@ -23,6 +23,7 @@
   "node-red": {
     "nodes": {
       "in": "nodes/in.js",
+      "out" : "nodes/out.js",
       "server": "nodes/server.js",
       "api": "zway.js"
     }
@@ -31,5 +32,5 @@
     "type": "git",
     "url": "git+https://github.com/bkorda/node-red-contrib-zway.git"
   },
-  "version": "0.0.1"
+  "version": "0.0.2"
 }

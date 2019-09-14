@@ -1,0 +1,146 @@
+<script type="text/x-red" data-template-name="zway-output">
+    <link rel="stylesheet" href="zway/static/css/bootstrap-multiselect.css" type="text/css" />
+    <link rel="stylesheet" href="zway/static/css/common.css" type="text/css" />
+
+    <div class="form-row">
+        <label for="node-input-name" class="l-width"><i class="icon-tag"></i> <span data-i18n="label.name"></span></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]placeholder.name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-server" class="l-width"><i class="fa fa-globe"></i> <span data-i18n="label.server"></span></label>
+        <input type="text" id="node-input-server">
+    </div>
+    <div class="form-row">
+        <label for="node-input-device" class="l-width"><i class="fa fa-crosshairs"></i> <span data-i18n="label.device"></span></label>
+        <select id="node-input-device"></select>
+    </div>
+    <div class="form-row">
+        <label for="force-refresh" class="l-width"><i class="fa fa-refresh"></i> <span data-i18n="label.refresh"></span></label>
+        <button type="button" style="width: 70%" class="btn btn-light" id="force-refresh" name="force-refresh"><span data-i18n="label.refresh_devices_list"></span></button>
+    </div>
+    <div class="form-row">
+        <label for="node-input-command" class="l-width"><i class="fa fa-tasks"></i> <span data-i18n="label.command"></span></label>
+        <input type="text" id="node-input-command" style="width:70%">
+        <input type="hidden" id="node-input-commandType">
+    </div>
+	<!-- <div class="form-row">
+        <label for="node-input-payload" class="l-width"><i class="fa fa-envelope"></i> <span data-i18n="label.payload"></span></label>
+        <input type="text" id="node-input-payload" style="width:70%">
+        <input type="hidden" id="node-input-payloadType">
+    </div>
+    <hr>
+    <h4><span data-i18n="label.options"></span></h4>
+    <div class="form-row">
+        <label for="node-input-transitionTime" class="l-width"><span data-i18n="label.transition_time"></span></label>
+        <input type="number" id="node-input-transitionTime" data-i18n="[placeholder]placeholder.transition_time">
+    </div> -->
+</script>
+
+<script type='text/javascript'>
+    RED.nodes.registerType('zway-output', {
+        category: 'ZWAY',
+        color: '#f6f6f6',
+        align: 'right',
+        defaults: {
+            name: {
+                value: ""
+            },
+            server: {
+                type: "zway-server",
+                required: true
+            },
+            device: {
+                value: "",
+                required: true
+            },
+            device_name: {
+                value: null
+            },
+            command: {
+                value: 'on',
+            },
+            commandType: {
+                value: 'zway_cmd',
+            },
+            payload: {
+                value: 'payload',
+            },
+            // payloadType: {
+            //     value: 'msg',
+            // },
+            // transitionTime: {
+            //     value: null
+            // }
+        },
+        inputLabels: "event",
+        paletteLabel: 'out',
+        inputs: 1,
+        outputs: 0,
+        icon: "zway.png",
+        label: function() {
+            var label = 'zway-out';
+            if (this.name) {
+                label = this.name;
+            } else if (typeof(this.device_name) == 'string' && this.device_name.length) {
+                label = this.device_name;
+            } else if (typeof(this.device) == 'string' && this.device.length) {
+                label = this.device;
+            }
+
+            return label;
+        },
+        oneditprepare: function() {
+            var node = this;
+
+            var topicTypes = {
+                value: 'zway_cmd',
+                label: 'ZWay',
+                icon: 'icons/node-red-contrib-zway/zway-orig.png',
+                options: [
+                    {'value':'on', 'label':'Switch (true/false)'},
+                    {'value':'open', 'label':'Lock (true/false)'},
+                    {'value':'toggle', 'label':'Toggle'},
+                    {'value':'blinds', 'label':'Blinds(0...255)'},
+                    {'value':'brightness', 'label':'Brightness(0...255)'},
+                    {'value':'rgb', 'lable':'RGB(rrr,ggg,bbb)'}
+                ]
+            };
+
+            $('#node-input-command').typedInput({
+                types: [topicTypes, {value:'homekit',label:'homekit',icon: 'icons/node-red-contrib-zway/homekit-logo.png',options:['homekit']}, 'str', 'msg'],
+                default: 'msg',
+                value: 'topic',
+                typeField: $('#node-input-commandType'),
+            });
+
+            $('#node-input-commandType').val(node.commandType);
+
+            setTimeout(function(){
+                var $deviceInput = $('#node-input-device');
+
+                zway_getItemList(node.device, '#node-input-device', {allowEmpty:true});
+
+                $deviceInput.on('change', function(){
+                    // deconz_getItemStateList(0, '#node-input-state');
+                });
+                setTimeout(function () {
+                    // deconz_getItemStateList(node.state, '#node-input-state');
+                },100);
+            }, 100); //we need small timeout, too fire change event for server select
+        },
+
+        oneditsave: function () {
+            var selectedOptions = $('#node-input-device option:selected');
+            if (selectedOptions) {
+                this.device = selectedOptions.map(function () {
+                    return $(this).val();
+                });
+
+                this.device_name = zway_filterDeviceName(selectedOptions.text());
+            } else {
+                this.device_name = this.device = null;
+            }
+        }
+    });
+</script>
+
