@@ -5,7 +5,7 @@ Available nodes are:
 * zway-in: A node to subscribe to Z-Way devices
 
 To do:
-- [ ] Send commands to devices
+- [x] Send commands to devices
 - [ ] Electric meter node
 - [ ] Separate battery node
 - [ ] HomeKit output
