@@ -68,6 +68,8 @@ module.exports = function(RED) {
                                     break;
                                 
                                 case 'blinds':
+                                    command = 'exactSmooth?level=' + parseFloat(payload);
+                                    break;
                                 case 'brightness':
                                     command = 'exact?level=' + parseFloat(payload);
                                     break;
@@ -145,7 +147,7 @@ module.exports = function(RED) {
                     node.status({
                         fill: "red",
                         shape: "dot",
-                        text: "node-red-contrib-deconz/out:status.connection"
+                        text: "node-red-contrib-zway/out:status.connection"
                     });
 
                     node.cleanTimer = setTimeout(function(){
@@ -158,7 +160,7 @@ module.exports = function(RED) {
                         node.status({
                             fill: "green",
                             shape: "dot",
-                            text: "node-red-contrib-deconz/out:status.ok"
+                            text: "node-red-contrib-zway/out:status.ok"
                         });
                     } else if ('error' in response) {
                         response.error.post = post; //add post data
@@ -194,7 +196,9 @@ module.exports = function(RED) {
                 command = 'exact?level=' + payload.Hue * 182
             } else if (payload.Saturation !== undefined) {
                 command = 'exact?level=' + Math.round(payload.Saturation * 2.55);
-            } 
+            }  else if (payload.TargetPosition !== undefined) {
+                command = 'exactSmooth?level=' + payload.TargetPosition * 2.55
+            }
             return command;
         }
     }

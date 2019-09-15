@@ -49,13 +49,7 @@ module.exports = function(RED) {
                         node.meta = deviceMeta;
 
                         //status
-                        if ("state" in deviceMeta && "reachable" in deviceMeta.state && deviceMeta.state.reachable === false) {
-                            node.status({
-                                fill: "red",
-                                shape: "ring",
-                                text: "node-red-contrib-zway/get:status.not_reachable"
-                            });
-                        } else if ("config" in deviceMeta && "reachable" in deviceMeta.config && deviceMeta.config.reachable === false) {
+                        if ("metrics" in deviceMeta && "isFailed" in deviceMeta.metrics && deviceMeta.metrics.isFailed === true) {
                             node.status({
                                 fill: "red",
                                 shape: "ring",
@@ -65,11 +59,11 @@ module.exports = function(RED) {
                             node.status({
                                 fill: "green",
                                 shape: "dot",
-                                text: (config.state in node.meta.state)?(node.meta.state[config.state]).toString():"node-red-contrib-zway/get:status.received",
+                                text: "node-red-contrib-zway/get:status.received",
                             });
 
                             node.send({
-                                payload:(config.state in node.meta.state)?node.meta.state[config.state]:node.meta.state,
+                                payload: node.meta.metrics,
                                 meta:deviceMeta,
                             });
                         }
@@ -90,11 +84,11 @@ module.exports = function(RED) {
                 node.status({
                     fill: "red",
                     shape: "dot",
-                    text: "node-red-contrib-deconz/get:status.device_not_set"
+                    text: "node-red-contrib-zway/get:status.device_not_set"
                 });
             }
         }
     }
 
-    RED.nodes.registerType('deconz-get', deConzItemGet);
+    RED.nodes.registerType('zway-get', deConzItemGet);
 };
