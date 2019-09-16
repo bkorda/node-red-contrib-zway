@@ -9,6 +9,8 @@ To do:
 - [x] Get node
 - [ ] Separate battery node
 - [ ] HomeKit output
+- [ ] Reverse for roller motors
+- [ ] Min-Max value limitation for roller motors
 
 # Support
 Developing and supporting this plugin needs time and efforts. Appreciate your support on [Patreon](https://www.patreon.com/user?u=24406897). Here, you can sign up to be a member and help support my project.
