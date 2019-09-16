@@ -25,6 +25,7 @@ module.exports = function(RED) {
 
             node.payload = config.payload;
             node.command = config.command;
+            node.payloadType = config.payloadType;
             node.commandType = config.commandType;
             node.cleanTimer = null;
 
@@ -34,7 +35,44 @@ module.exports = function(RED) {
                 this.on('input', function (message) {
                     clearTimeout(node.cleanTimer);
 
-                    var payload = message[node.payload];
+                    var payload;
+                    switch (node.payloadType) {
+                        case 'flow':
+                        case 'global': {
+                            RED.util.evaluateNodeProperty(node.payload, node.payloadType, this, message, function (error, result) {
+                                if (error) {
+                                    node.error(error, message);
+                                } else {
+                                    payload = result;
+                                }
+                            });
+                            break;
+                        }
+                        case 'date': {
+                            payload = Date.now();
+                            break;
+                        }
+                        case 'zway_payload':
+                            payload = node.payload;
+                            break;
+
+                        case 'num': {
+                            payload = parseInt(node.config.payload);
+                            break;
+                        }
+
+                        case 'str': {
+                            payload = node.config.payload;
+                            break;
+                        }
+
+                        case 'homekit':
+                        case 'msg':
+                        default: {
+                            payload = message[node.payload];
+                            break;
+                        }
+                    }
 
                     var command;
                     switch (node.commandType) {
@@ -191,14 +229,18 @@ module.exports = function(RED) {
             if (payload.On !== undefined) {
                 command = payload.On ? 'on' : 'off';
             } else if (payload.Brightness !== undefined) {
-                command = 'exact?level=' + Math.round(payload.Brightness * 2.55)
-            } else if (payload.Hue !== undefined) {
-                command = 'exact?level=' + payload.Hue * 182
-            } else if (payload.Saturation !== undefined) {
-                command = 'exact?level=' + Math.round(payload.Saturation * 2.55);
+                command = 'exact?level=' + payload.Brightness
             }  else if (payload.TargetPosition !== undefined) {
-                command = 'exactSmooth?level=' + payload.TargetPosition * 2.55
+                command = 'exact?level=' + payload.TargetPosition
+            } else if (payload.LockTargetState !== undefined) {
+                if (msg.payload.LockTargetState === 0) {
+                    command = "open"
+                }
+                else if (msg.payload.LockTargetState === 1) {
+                    command = "close"
+                }
             }
+            
             return command;
         }
     }

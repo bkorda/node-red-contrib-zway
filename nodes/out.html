@@ -23,12 +23,12 @@
         <input type="text" id="node-input-command" style="width:70%">
         <input type="hidden" id="node-input-commandType">
     </div>
-	<!-- <div class="form-row">
+	<div class="form-row">
         <label for="node-input-payload" class="l-width"><i class="fa fa-envelope"></i> <span data-i18n="label.payload"></span></label>
         <input type="text" id="node-input-payload" style="width:70%">
         <input type="hidden" id="node-input-payloadType">
     </div>
-    <hr>
+    <-- <hr>
     <h4><span data-i18n="label.options"></span></h4>
     <div class="form-row">
         <label for="node-input-transitionTime" class="l-width"><span data-i18n="label.transition_time"></span></label>
@@ -65,9 +65,9 @@
             payload: {
                 value: 'payload',
             },
-            // payloadType: {
-            //     value: 'msg',
-            // },
+            payloadType: {
+                value: 'msg',
+            },
             // transitionTime: {
             //     value: null
             // }
@@ -113,6 +113,32 @@
                 typeField: $('#node-input-commandType'),
             });
 
+            $('#node-input-command').on('change', function(type, value) {
+                var val = $(this).val();
+                if ('toggle' === val) {
+                    $('#node-input-payload').closest('.form-row').hide();
+                } else {
+                    $('#node-input-payload').closest('.form-row').show();
+                }
+            });
+
+            var payloadTypes = {
+                value: 'zway_payload',
+                label: 'ZWay',
+                icon: 'icons/node-red-contrib-zway/zway-orig.png',
+                options: [
+                    {'value':'on', 'label':'On (Switch)'},
+                    {'value':'off', 'label':'Off (Switch)'}
+                ]
+            };
+            $('#node-input-payload').typedInput({
+                types: [payloadTypes, 'msg', 'flow', 'global', 'str', 'num', 'date'],
+                default: 'msg',
+                value: 'payload',
+                typeField: $('#node-input-payloadType'),
+            });
+
+            $('#node-input-payloadType').val(node.payloadType);
             $('#node-input-commandType').val(node.commandType);
 
             setTimeout(function(){
