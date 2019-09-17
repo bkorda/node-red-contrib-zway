@@ -26,13 +26,8 @@ function zway_getItemList(nodeItem, selectedItemElementName, options = {}) {
             })
                 .done(function (data, textStatus, jqXHR) {
                     try {
-                        // if (options.allowEmpty) {
-                            // selectedItemElement.html('<option value="" disabled selected>Select device</option>');
-                        // }
-
                         var disabled = '';
                         var nameSuffix = '';
-                        // var selected = false;
                         var prevName = '';
 
                         var itemList = [];
@@ -52,19 +47,21 @@ function zway_getItemList(nodeItem, selectedItemElementName, options = {}) {
                             disabled = '';
                             nameSuffix = '';
 
-                            // if (options.deviceType && options.deviceType != value.meta.device_type) {
-                            //     return true;
-                            // }
+                            if (value.meta === undefined) {
+                                return true;
+                            }
 
-                            // if (options.batteryFilter &&
-                            //     (!("meta" in value)
-                            //     || !("config" in value.meta)
-                            //     // || !("battery" in value.meta.config)
-                            //     )
-                            // ) {
+                            if (options.deviceType && options.deviceType != value.meta.deviceType) {
+                                return true;
+                            }
 
-                            //     return true;
-                            // }
+                            if (value.meta.deviceType === "text") {
+                                return true;
+                            }
+
+                            if (options.batteryFilter && value.meta.deviceType !== "battery") {
+                                return true;
+                            }
 
                             var parentElement = selectedItemElement;
                             console.log(value);

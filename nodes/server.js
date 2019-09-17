@@ -75,7 +75,7 @@ module.exports = function(RED) {
                         for (var index in dataParsed.data.devices) {
                             var device = dataParsed.data.devices[index];
                             // prop.device_id = parseInt(index);
-                            node.items[index] = device;
+                            node.items[device.id] = device;
                             
                             if (node.oldItemsList !== undefined && device.id in node.oldItemsList) {} else {
                                 node.emit("onNewDevice", device.id);

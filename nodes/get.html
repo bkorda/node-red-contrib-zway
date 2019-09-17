@@ -69,7 +69,7 @@
             setTimeout(function(){
                 var $deviceInput = $('#node-input-device');
 
-                zway_getItemList(node.device, '#node-input-device', {allowEmpty:true, groups:true});
+                zway_getItemList(node.device, '#node-input-device', {allowEmpty:true});
 
                 $deviceInput.on('change', function(){
                     // zway_getItemStateList(0, '#node-input-state', {groups:true});
