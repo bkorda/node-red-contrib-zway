@@ -141,10 +141,10 @@
                 zway_getItemList(node.device, '#node-input-device', {allowEmpty:true});
 
                 $deviceInput.on('change', function(){
-                    // deconz_getItemStateList(0, '#node-input-state');
+                    // zway_getItemStateList(0, '#node-input-state');
                 });
                 setTimeout(function () {
-                    // deconz_getItemStateList(node.state, '#node-input-state');
+                    // zway_getItemStateList(node.state, '#node-input-state');
                 },100);
             }, 100); //we need small timeout, too fire change event for server select
         },

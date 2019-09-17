@@ -1,5 +1,5 @@
 module.exports = function(RED) {
-    class deConzItemGet {
+    class zwayItemGet {
         constructor(config) {
             RED.nodes.createNode(this, config);
 
@@ -90,5 +90,5 @@ module.exports = function(RED) {
         }
     }
 
-    RED.nodes.registerType('zway-get', deConzItemGet);
+    RED.nodes.registerType('zway-get', zwayItemGet);
 };

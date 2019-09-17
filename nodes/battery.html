@@ -1,8 +1,6 @@
-<script type="text/x-red" data-template-name="zway-input">
-
+<script type="text/x-red" data-template-name="zway-battery">
     <link rel="stylesheet" href="zway/static/css/bootstrap-multiselect.css" type="text/css" />
     <link rel="stylesheet" href="zway/static/css/common.css" type="text/css" />
-
     <div class="form-row">
         <label for="node-input-name" class="l-width"><i class="icon-tag"></i> <span data-i18n="label.name"></span></label>
         <input type="text" id="node-input-name" data-i18n="[placeholder]placeholder.name">
@@ -19,31 +17,16 @@
         <label for="force-refresh" class="l-width"><i class="fa fa-refresh"></i> <span data-i18n="label.refresh"></span></label>
         <button type="button" style="width: 70%" class="btn btn-light" id="force-refresh" name="force-refresh"><span data-i18n="label.refresh_devices_list"></span></button>
     </div>
-    <!-- <div class="form-row">
-        <label for="node-input-state" class="l-width"><i class="fa fa-tag"></i> <span data-i18n="label.state"></span></label>
-        <select id="node-input-state"></select>
-    </div>
     <div class="form-row">
-        <label for="node-input-output" class="l-width"><i class="fa fa-sign-out"></i> <span data-i18n="label.output"></span></label>
-        <select id="node-input-output" style="width: auto;">
-            <option value="always" data-i18n="label.always">Always</option>
-            <option value="onchange" data-i18n="label.on_state_change">On state change</option>
-            -<option value="onupdate" data-i18n="label.on_update">On update</option>
-        </select>
-    </div>
-    <div class="form-row">
-        <label for='node-input-outputAtStartup' class="l-width"><i class='fa fa-share-square'></i> <span data-i18n="label.start_output_1"></span></label>
+        <label for='node-input-outputAtStartup' class="l-width"><i class='fa fa-share-square'></i> <span data-i18n="label.start_output"></span></label>
         <input type="checkbox" id="node-input-outputAtStartup" checked="checked" style="display: inline-block; width: auto; vertical-align: top;"> <span data-i18n="label.start_output_help"></span></input>
     </div>
-        <div class="form-row">
-        <label for='node-input-outputAtStartup2' class="l-width"><i class='fa fa-share-square'></i> <span data-i18n="label.start_output_2"></span></label>
-         <span data-i18n="label.always"></span>
-    </div> -->
+    <div class="form-tips" data-i18n="[html]tip.init"></div>
 </script>
 
 
 <script type='text/javascript'>
-    RED.nodes.registerType('zway-input', {
+    RED.nodes.registerType('zway-battery', {
         category: 'ZWAY',
         color: '#f6f6f6',
         defaults: {
@@ -60,26 +43,19 @@
             },
             device_name: {
                 value: null
+            },
+            outputAtStartup: {
+                value: true,
+                required: true,
             }
-            // state: {
-            //     value: ""
-            // },
-            // output: {
-            //    value: "always"
-            // },
-            // outputAtStartup: {
-            //     value: true,
-            //     required: true,
-            // }
         },
         inputs: 0,
         outputs: 2,
         outputLabels: ["state", "homekit"],
-        paletteLabel: 'in',
+        paletteLabel: 'battery',
         icon: "zway.png",
         label: function () {
-            var label = 'zway-input';
-            
+            var label = 'zway-battery';
             if (this.name) {
                 label = this.name;
             } else if (typeof(this.device_name) == 'string' && this.device_name.length) {
@@ -92,20 +68,8 @@
         },
         oneditprepare: function () {
             var node = this;
-
             setTimeout(function(){
-                var $deviceInput = $('#node-input-device');
-                zway_getItemList(node.device, '#node-input-device', {allowEmpty:true});
-                $deviceInput.on("change", function(){
-                    // zway_getItemStateList(0, '#node-input-state');
-                    device = $('#node-input-device option:selected').val();
-                    if (!device.match(/^\d/) && !device.match(/^group_/)) { node.state = 0; }
-                    // updateOutput();
-                });
-                setTimeout(function () {
-                    // zway_getItemStateList(node.state, '#node-input-state');
-                },100);
-                // if (!node.output) { $outputSelect.val('always').multiselect('refresh'); }
+                zway_getItemList(node.device, '#node-input-device', {allowEmpty:true, batteryFilter:true});
             }, 100); //we need small timeout, too fire change event for server select
         },
         oneditsave: function () {
@@ -114,6 +78,7 @@
                 this.device = selectedOptions.map(function () {
                     return $(this).val();
                 });
+
                 this.device_name = zway_filterDeviceName(selectedOptions.text());
             } else {
                 this.device_name = this.device = null;
@@ -121,6 +86,4 @@
         }
     });
 </script>
-
-
 
