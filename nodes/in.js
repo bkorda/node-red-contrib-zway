@@ -160,8 +160,8 @@ module.exports = function(RED) {
                                 if (device.probeType === 'multiLevel') {
 
                                 } else if (device.probeType === 'motor') {
-                                    characteristic.CurrentPosition = state.level;
-                                    characteristic.TargetPosition = state.level;
+                                    characteristic.CurrentPosition = parseFloat(state.level);
+                                    characteristic.TargetPosition = parseFloat(state.level);
                                 } 
                                 //switchColor_soft_white
                                 //switchColor_cold_white
