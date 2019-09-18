@@ -64,7 +64,6 @@ function zway_getItemList(nodeItem, selectedItemElementName, options = {}) {
                             }
 
                             var parentElement = selectedItemElement;
-                            console.log(value);
                             $('<option'+ disabled+' value="' + value.uniqueid +'">&#9679;&nbsp;' + value.meta.metrics.title + (nameSuffix?' ('+nameSuffix+')':'') +'</option>').appendTo(parentElement);
                         });
 

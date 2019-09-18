@@ -239,6 +239,10 @@ module.exports = function(RED) {
                 else if (msg.payload.LockTargetState === 1) {
                     command = "close"
                 }
+            } else if (payload.TargetHeatingCoolingState !== undefined) {
+                command = payload.TargetHeatingCoolingState === 0 ? "off" : "on"
+            } else if (payload.TargetTemperature !== undefined) {
+                command = 'exact?level=' + payload.TargetTemperature
             }
             
             return command;

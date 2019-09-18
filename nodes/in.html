@@ -22,22 +22,26 @@
     <!-- <div class="form-row">
         <label for="node-input-state" class="l-width"><i class="fa fa-tag"></i> <span data-i18n="label.state"></span></label>
         <select id="node-input-state"></select>
-    </div>
+    </div> 
     <div class="form-row">
         <label for="node-input-output" class="l-width"><i class="fa fa-sign-out"></i> <span data-i18n="label.output"></span></label>
         <select id="node-input-output" style="width: auto;">
             <option value="always" data-i18n="label.always">Always</option>
             <option value="onchange" data-i18n="label.on_state_change">On state change</option>
-            -<option value="onupdate" data-i18n="label.on_update">On update</option>
+            <option value="onupdate" data-i18n="label.on_update">On update</option>
+        </select>
+    </div> -->
+    <div class="form-row">
+        <label for="node-input-thermostat" class="l-width"><i class="fa fa-envelope"></i> <span data-i18n="label.thermostat"></span></label>
+        <select type="text" id="node-input-thermostat">
+            <option value="not">Not</option>
+            <option value="cooling">Cooling</option>
+            <option value="heating">Heating</option>
         </select>
     </div>
-    <div class="form-row">
+    <!-- <div class="form-row">
         <label for='node-input-outputAtStartup' class="l-width"><i class='fa fa-share-square'></i> <span data-i18n="label.start_output_1"></span></label>
         <input type="checkbox" id="node-input-outputAtStartup" checked="checked" style="display: inline-block; width: auto; vertical-align: top;"> <span data-i18n="label.start_output_help"></span></input>
-    </div>
-        <div class="form-row">
-        <label for='node-input-outputAtStartup2' class="l-width"><i class='fa fa-share-square'></i> <span data-i18n="label.start_output_2"></span></label>
-         <span data-i18n="label.always"></span>
     </div> -->
 </script>
 
@@ -60,7 +64,7 @@
             },
             device_name: {
                 value: null
-            }
+            },
             // state: {
             //     value: ""
             // },
@@ -99,7 +103,8 @@
                 $deviceInput.on("change", function(){
                     // zway_getItemStateList(0, '#node-input-state');
                     device = $('#node-input-device option:selected').val();
-                    if (!device.match(/^\d/) && !device.match(/^group_/)) { node.state = 0; }
+
+                    if (!device.match(/^\d/)) { node.state = 0; }
                     // updateOutput();
                 });
                 setTimeout(function () {

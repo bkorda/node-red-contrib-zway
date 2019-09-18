@@ -7,13 +7,17 @@
         "output": "Вывод",
         "refresh": "Обновить",
         "refresh_devices_list": "Обновить список",
-        "start_output": "Начать вывод",
+        "start_output_1": "Начать вывод #1",
+        "start_output_2": "Начать вывод #2",
         "start_output_help": "Отправить состояние при старте",
         "always": "Всегда",
         "on_state_change": "При смене статуса",
         "on_update": "При обновлении времени",
         "devices": "Устройства",
-        "light_groups": "Группы"
+        "thermostat": "Термостат",
+        "thermostat_not" : "Нет",
+        "thermostat_cooling" : "Охлаждение",
+        "thermostat_heating" : "Обогрев"
     },
     "placeholder": {
         "name": "Название"
@@ -27,7 +31,6 @@
         "reconnecting": "подключение..."
     },
     "multiselect": {
-        "groups":  "Группы",
         "devices": "Устройства",
         "filter_devices": "Поиск...",
         "refresh": "Обновить список",

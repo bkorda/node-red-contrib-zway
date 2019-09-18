@@ -152,9 +152,18 @@ module.exports = function(RED) {
                             characteristic.LockCurrentState = state.level === 'close' ? 1 : 0;
                             characteristic.LockTargetState = state.level === 'close' ? 1 : 0;
                             break;
+                        case "thermostat":
+                            if (device.probeType === 'thermostat_set_point') {
+                                characteristic.CurrentTemperature == parseFloat(state.level);
+                            }
+                            break;
                         case 'switchBinary':
                             if (device.probeType === 'thermostat_mode') {
-
+                                if (node.config.thermostat === 'cooling') {
+                                    payload.TargetHeatingCoolingState = state.level === 'off' ? 0 : 2
+                                } else if (node.config.thermostat === 'heating') {
+                                    payload.TargetHeatingCoolingState = state.level === 'off' ? 0 : 1
+                                }
                             } else {
                                 characteristic.On = state.level === 'on';
                                 if (no_reponse) characteristic.On = "NO_RESPONSE";

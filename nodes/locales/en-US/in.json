@@ -7,13 +7,17 @@
         "output": "Output",
         "refresh": "Refresh",
         "refresh_devices_list": "Refresh Devices List",
-        "start_output": "Start Output",
+        "start_output_1": "Start Output #1",
+        "start_output_2": "Start Output #2",
         "start_output_help": "Send state on start",
         "always": "Always",
         "on_state_change": "On state change",
         "on_update": "On update",
         "devices": "Devices",
-        "light_groups": "Light Groups"
+        "thermostat": "Thermostat",
+        "thermostat_not" : "Not",
+        "thermostat_cooling" : "Cooling",
+        "thermostat_heating" : "Heating"
     },
     "placeholder": {
         "name": "Name"
@@ -27,7 +31,6 @@
         "reconnecting": "reconnecting..."
     },
     "multiselect": {
-        "groups":  "Light Groups",
         "devices": "Devices",
         "filter_devices": "Filter devices...",
         "refresh": "Refresh devices list",
