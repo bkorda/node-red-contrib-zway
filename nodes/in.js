@@ -148,6 +148,10 @@ module.exports = function(RED) {
                 //by types
                 if ("deviceType" in device) {
                     switch(device.deviceType) {
+                        case 'doorlock':
+                            characteristic.LockCurrentState = state.level === 'close' ? 1 : 0;
+                            characteristic.LockTargetState = state.level === 'close' ? 1 : 0;
+                            break;
                         case 'switchBinary':
                             if (device.probeType === 'thermostat_mode') {
 
@@ -158,7 +162,13 @@ module.exports = function(RED) {
                             break;
                         case 'switchMultilevel':
                                 if (device.probeType === 'multiLevel') {
-
+                                    if (state.level !== 0) {
+                                        characteristic.Brightness = state.level + 1;
+                                        characteristic.On = true;
+                                    } else {
+                                        characteristic.Brightness = 0;
+                                        characteristic.On = false;
+                                    }
                                 } else if (device.probeType === 'motor') {
                                     characteristic.CurrentPosition = parseFloat(state.level);
                                     characteristic.TargetPosition = parseFloat(state.level);
