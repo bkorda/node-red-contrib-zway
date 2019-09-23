@@ -148,6 +148,10 @@ module.exports = function(RED) {
                             command = payload;
                         } 
 
+                        if (command == null || command == undefined) {
+                            return false;
+                        }
+
                         node.postData(url, command);
                     } else {
                         node.status({
