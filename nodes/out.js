@@ -233,10 +233,10 @@ module.exports = function(RED) {
             }  else if (payload.TargetPosition !== undefined) {
                 command = 'exact?level=' + payload.TargetPosition
             } else if (payload.LockTargetState !== undefined) {
-                if (msg.payload.LockTargetState === 0) {
+                if (payload.LockTargetState === 0) {
                     command = "open"
                 }
-                else if (msg.payload.LockTargetState === 1) {
+                else if (payload.LockTargetState === 1) {
                     command = "close"
                 }
             } else if (payload.TargetHeatingCoolingState !== undefined) {
