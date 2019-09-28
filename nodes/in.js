@@ -170,9 +170,9 @@ module.exports = function(RED) {
                             }
                             break;
                         case 'switchMultilevel':
-                                if (device.probeType === 'multiLevel') {
+                                if (device.probeType === 'multilevel') {
                                     if (state.level !== 0) {
-                                        characteristic.Brightness = state.level + 1;
+                                        characteristic.Brightness = parseFloat(state.level) + 1;
                                         characteristic.On = true;
                                     } else {
                                         characteristic.Brightness = 0;
@@ -302,29 +302,10 @@ module.exports = function(RED) {
                         else if ([4001, 4002, 4004, 4005, 4006, 4010].indexOf(state['buttonevent']) >= 0) characteristic.ServiceLabelIndex = 4;
                         else if ([5001, 5002, 5004, 5005, 5006, 5010].indexOf(state['buttonevent']) >= 0) characteristic.ServiceLabelIndex = 5;
                     }
-    
-                        // if (state['consumption'] !== null){
-                        //     characteristic.OutletInUse = state['consumption'];
-                        // }
-
-                    if (state['vibration'] !== undefined) {
-                        characteristic.ContactSensorState = state['vibration'];
-                        if (no_reponse) characteristic.ContactSensorState = "NO_RESPONSE";
-                    }
-    
+                   
                     if (state['bri'] !== undefined) {
                         characteristic.Brightness = state['bri'] / 2.55;
                         if (no_reponse) characteristic.Brightness = "NO_RESPONSE";
-                    }
-    
-                    if (state['hue'] !== undefined) {
-                        characteristic.Hue = state['hue'] / 182;
-                        if (no_reponse) characteristic.Hue = "NO_RESPONSE";
-                    }
-    
-                    if (state['sat'] !== undefined) {
-                        characteristic.Saturation = state['sat'] / 2.55;
-                        if (no_reponse) characteristic.Saturation = "NO_RESPONSE";
                     }
     
                     if (state['ct'] !== undefined) {
