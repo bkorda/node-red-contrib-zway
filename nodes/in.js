@@ -170,17 +170,18 @@ module.exports = function(RED) {
                             }
                             break;
                         case 'switchMultilevel':
+                                var level = parseFloat(state.level);
                                 if (device.probeType === 'multilevel') {
-                                    if (state.level !== 0) {
-                                        characteristic.Brightness = parseFloat(state.level) + 1;
+                                    if (level !== 0) {
+                                        characteristic.Brightness = level;
                                         characteristic.On = true;
                                     } else {
                                         characteristic.Brightness = 0;
                                         characteristic.On = false;
                                     }
                                 } else if (device.probeType === 'motor') {
-                                    characteristic.CurrentPosition = parseFloat(state.level);
-                                    characteristic.TargetPosition = parseFloat(state.level);
+                                    characteristic.CurrentPosition = level
+                                    characteristic.TargetPosition = level
                                 } 
                                 //switchColor_soft_white
                                 //switchColor_cold_white

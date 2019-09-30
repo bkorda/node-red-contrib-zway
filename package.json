@@ -34,5 +34,5 @@
     "type": "git",
     "url": "git+https://github.com/bkorda/node-red-contrib-zway.git"
   },
-  "version": "0.1.7"
+  "version": "0.1.8"
 }
