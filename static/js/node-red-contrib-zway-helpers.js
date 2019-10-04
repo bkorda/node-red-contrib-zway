@@ -68,31 +68,31 @@ function zway_getItemList(nodeItem, selectedItemElementName, options = {}) {
                         });
 
                         // Enable item selection
-                        selectedItemElement.multiselect('enable');
+                        selectedItemElement.multipleSelect('enable');
                         // Finally, set the value of the input select to the selected value
                         selectedItemElement.val(itemName);
                         // // Rebuild bootstrap multiselect form
-                        selectedItemElement.multiselect('rebuild');
+                        selectedItemElement.multipleSelect('refresh');
                         // // Trim selected item string length with elipsis
                         var selectItemSpanElement = $(`span.multiselect-selected-text:contains("${itemName}")`);
                         var sHTML = selectItemSpanElement.html();
                         selectItemSpanElement.html(zway_truncateWithEllipses(sHTML, 35));
                     } catch (error) {
-                        console.error('Error #4534');
+                        console.error('Error #4534');   
                         console.log(error);
                     }
                 })
                 .fail(function (jqXHR, textStatus, errorThrown) {
                     // Disable item selection if no items were retrieved
-                    selectedItemElement.multiselect('disable');
-                    selectedItemElement.multiselect('refresh');
+                    selectedItemElement.multipleSelect('disable');
+                    selectedItemElement.multipleSelect('refresh');
                     //console.error(`Error: ${errorThrown}`);
                 });
 
         } else {
             // Disable item selection if no (valid) controller was selected
-            selectedItemElement.multiselect('disable');
-            selectedItemElement.multiselect('refresh');
+            selectedItemElement.multipleSelect('disable');
+            selectedItemElement.multipleSelect('refresh');
         }
     }
 
@@ -103,19 +103,21 @@ function zway_getItemList(nodeItem, selectedItemElementName, options = {}) {
 
 
     // Initialize bootstrap multiselect form
-    selectedItemElement.multiselect({
-        enableFiltering: true,
-        enableCaseInsensitiveFiltering: true,
+    selectedItemElement.multipleSelect({
+        maxHeight: 300,
+        dropWidth: 320,
+        width: 320,
+        single: !(typeof $(this).attr('multiple') !== typeof undefined && $(this).attr('multiple') !== false),
+        filter: true,
         filterPlaceholder: RED._("node-red-contrib-zway/in:multiselect.filter_devices"),
+
         includeResetOption: true,
         includeResetDivider: true,
         resetText: RED._("node-red-contrib-zway/in:multiselect.refresh"),
         numberDisplayed: 1,
-        maxHeight: 300,
         disableIfEmpty: true,
         nSelectedText: 'selected',
-        nonSelectedText: RED._("node-red-contrib-zway/in:multiselect.none_selected"),
-        buttonWidth: '70%',
+        nonSelectedText: RED._("node-red-contrib-zway/in:multiselect.none_selected")
     });
 
     // Initial call to populate item list
@@ -161,11 +163,11 @@ function zway_getItemStateList(nodeItem, selectedItemElementName, options = {}) 
                         });
 
                         // Enable item selection
-                        selectedItemElement.multiselect('enable');
+                        selectedItemElement.multipleSelect('enable');
                         // Finally, set the value of the input select to the selected value
                         selectedItemElement.val(itemName);
                         // Rebuild bootstrap multiselect form
-                        selectedItemElement.multiselect('rebuild');
+                        selectedItemElement.multipleSelect('refresh');
                         // Trim selected item string length with elipsis
                         var selectItemSpanElement = $(`span.multiselect-selected-text:contains("${itemName}")`);
                         var sHTML = selectItemSpanElement.html();
@@ -179,15 +181,15 @@ function zway_getItemStateList(nodeItem, selectedItemElementName, options = {}) 
                 })
                 .fail(function (jqXHR, textStatus, errorThrown) {
                     // Disable item selection if no items were retrieved
-                    selectedItemElement.multiselect('disable');
-                    selectedItemElement.multiselect('refresh');
+                    selectedItemElement.multipleSelect('disable');
+                    selectedItemElement.multipleSelect('refresh');
                     //console.error(`Error: ${errorThrown}`);
                 });
 
         } else {
             // Disable item selection if no (valid) controller was selected
-            selectedItemElement.multiselect('disable');
-            selectedItemElement.multiselect('refresh');
+            selectedItemElement.multipleSelect('disable');
+            selectedItemElement.multipleSelect('refresh');
         }
     }
 
@@ -196,16 +198,23 @@ function zway_getItemStateList(nodeItem, selectedItemElementName, options = {}) 
     var selectedItemElement = $(selectedItemElementName);
 
 
-
+    var attr = $(this).attr('multiple');
 
     // Initialize bootstrap multiselect form
-    selectedItemElement.multiselect({
-        numberDisplayed: 1,
+    selectedItemElement.multipleSelect({
         maxHeight: 300,
+        dropWidth: 320,
+        width: 320,
+        single: !(typeof $(this).attr('multiple') !== typeof undefined && $(this).attr('multiple') !== false),
+        filter: true,
+        filterPlaceholder: RED._("node-red-contrib-zway/in:multiselect.filter_devices"),
+        includeResetOption: true,
+        includeResetDivider: true,
+        resetText: RED._("node-red-contrib-zway/in:multiselect.refresh"),
+        numberDisplayed: 1,
         disableIfEmpty: true,
         nSelectedText: 'selected',
-        nonSelectedText: RED._("node-red-contrib-zway/in:multiselect.complete_payload"),
-        buttonWidth: '70%',
+        nonSelectedText: RED._("node-red-contrib-zway/in:multiselect.none_selected")
     });
 
 
