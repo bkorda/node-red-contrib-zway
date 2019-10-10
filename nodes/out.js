@@ -38,7 +38,7 @@ module.exports = function(RED) {
                     var payload;
                     switch (node.payloadType) {
                         case 'flow':
-                        case 'global': {
+                        case 'global': 
                             RED.util.evaluateNodeProperty(node.payload, node.payloadType, this, message, function (error, result) {
                                 if (error) {
                                     node.error(error, message);
@@ -47,31 +47,31 @@ module.exports = function(RED) {
                                 }
                             });
                             break;
-                        }
-                        case 'date': {
+                        
+                        case 'date': 
                             payload = Date.now();
                             break;
-                        }
+                        
                         case 'zway_payload':
                             payload = node.payload;
                             break;
 
-                        case 'num': {
+                        case 'num': 
                             payload = parseInt(node.config.payload);
                             break;
-                        }
+                        
 
-                        case 'str': {
+                        case 'str': 
                             payload = node.config.payload;
                             break;
-                        }
+                        
 
                         case 'homekit':
                         case 'msg':
-                        default: {
+                        default: 
                             payload = message[node.payload];
                             break;
-                        }
+                        
                     }
 
                     var command;
@@ -84,11 +84,11 @@ module.exports = function(RED) {
                             command = node.command;
                             switch (command) {
                                 case 'on':
-                                    payload = payload && payload !== '0' ? command = 'on' : command = 'off';
+                                    payload = payload && payload !== 'off' ? command = 'on' : command = 'off';
                                     break;
                                 
                                 case 'open':
-                                    payload = payload && payload !== '0' ? command = 'open' : command = 'close';
+                                    payload = payload && payload !== 'close' ? command = 'open' : command = 'close';
                                     break;
 
                                 case 'toggle':
