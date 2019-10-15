@@ -173,15 +173,15 @@ module.exports = function(RED) {
                                 var level = parseFloat(state.level);
                                 if (device.probeType === 'multilevel') {
                                     if (level !== 0) {
-                                        characteristic.Brightness = level;
+                                        characteristic.Brightness = Math.ceil(level);
                                         characteristic.On = true;
                                     } else {
                                         characteristic.Brightness = 0;
                                         characteristic.On = false;
                                     }
                                 } else if (device.probeType === 'motor') {
-                                    characteristic.CurrentPosition = level
-                                    characteristic.TargetPosition = level
+                                    characteristic.CurrentPosition = Math.ceil(level)
+                                    characteristic.TargetPosition = Math.ceil(level)
                                 } 
                                 //switchColor_soft_white
                                 //switchColor_cold_white
@@ -207,27 +207,27 @@ module.exports = function(RED) {
                                         device.probeType === 'alarm_door'  ||
                                         device.probeType === 'alarmSensor_door') {
 
-                                characteristic.ContactSensorState = state.level === 'off'
+                                characteristic.ContactSensorState = state.level === 'off' ? 1 : 0;
                                 if (no_reponse) characteristic.ContactSensorState = "NO_RESPONSE";
                             } else if (device.probeType === 'smoke'       ||
                                         device.probeType === 'alarm_smoke' ||
                                         device.probeType === 'alarmSensor_smoke') {
 
-                                characteristic.SmokeDetected = state.level === 'on';
+                                characteristic.SmokeDetected = state.level === 'on' ? 1 : 0;
                                 if (no_reponse) characteristic.SmokeDetected = "NO_RESPONSE";
 
                             } else if (device.probeType === 'flood'       ||
                                         device.probeType === 'alarm_flood' ||
                                         device.probeType === 'alarmSensor_flood') {
 
-                                    characteristic.LeakDetected = state.level === 'on';
+                                    characteristic.LeakDetected = state.level === 'on' ? 1 : 0;
                                     if (no_reponse) characteristic.LeakDetected = "NO_RESPONSE";
 
                             } else if (device.probeType === 'co'       ||
                                         device.probeType === 'alarm_co' ||
                                         device.probeType === 'alarmSensor_co') {
                                     
-                                    characteristic.CarbonMonoxideDetected = state.level === 'on';
+                                    characteristic.CarbonMonoxideDetected = state.level === 'on' ? 1 : 0;
                                     if (no_reponse) characteristic.CarbonMonoxideDetected = "NO_RESPONSE";
                             }
 
@@ -273,42 +273,22 @@ module.exports = function(RED) {
                             // barometer
                             // ultraviolet
                             break;
+                            case 'sensorDiscrete':
+                                    var level = parseInt(state.level);
+                                    if ([10, 20, 30, 40, 50].indexOf(level) >= 0) characteristic.ProgrammableSwitchEvent = 0;
+                                    else if ([12, 22, 32, 42, 52].indexOf(level) >= 0) characteristic.ProgrammableSwitchEvent = 2;
+                                    if (no_reponse) characteristic.ProgrammableSwitchEvent = "NO_RESPONSE";
+            
+                                    //index of btn
+                                    if (level >= 10 && level < 20) characteristic.ServiceLabelIndex = 1;
+                                    else if (level >= 20 && level < 30) characteristic.ServiceLabelIndex = 2;
+                                    else if (level >= 30 && level < 40) characteristic.ServiceLabelIndex = 3;
+                                    else if (level >= 40 && level < 50) characteristic.ServiceLabelIndex = 4;
+                                    else if (level >= 50 && level < 60) characteristic.ServiceLabelIndex = 5;
+                            break;
                     }
                 // by params
                 } else {
-
-                    if (state['buttonevent'] !== undefined) {
-                        //https://github.com/dresden-elektronik/deconz-rest-plugin/wiki/Xiaomi-WXKG01LM
-                        // Event        Button        Action
-                        // 1000            One            initial press
-                        // 1001           One            single hold
-                        // 1002            One            single short release
-                        // 1003            One            single hold release
-                        // 1004           One            double short press
-                        // 1005            One            triple short press
-                        // 1006            One            quad short press
-                        // 1010            One            five+ short press
-                        if ([1002, 2002, 3002, 4002, 5002].indexOf(state['buttonevent']) >= 0) characteristic.ProgrammableSwitchEvent = 0;
-                        else if ([1004, 2004, 3004, 4004, 5004].indexOf(state['buttonevent']) >= 0) characteristic.ProgrammableSwitchEvent = 1;
-                        else if ([1001, 2001, 3001, 4001, 5001].indexOf(state['buttonevent']) >= 0) characteristic.ProgrammableSwitchEvent = 2;
-                        else if ([1005, 2005, 3005, 4005, 5005].indexOf(state['buttonevent']) >= 0) characteristic.ProgrammableSwitchEvent = 3;
-                        else if ([1006, 2006, 3006, 4006, 5006].indexOf(state['buttonevent']) >= 0) characteristic.ProgrammableSwitchEvent = 4;
-                        else if ([1010, 2010, 3010, 4010, 5010].indexOf(state['buttonevent']) >= 0) characteristic.ProgrammableSwitchEvent = 5;
-                        if (no_reponse) characteristic.ProgrammableSwitchEvent = "NO_RESPONSE";
-
-                        //index of btn
-                        if ([1001, 1002, 1004, 1005, 1006, 1010].indexOf(state['buttonevent']) >= 0) characteristic.ServiceLabelIndex = 1;
-                        else if ([2001, 2002, 2004, 2005, 2006, 2010].indexOf(state['buttonevent']) >= 0) characteristic.ServiceLabelIndex = 2;
-                        else if ([3001, 3002, 3004, 3005, 3006, 3010].indexOf(state['buttonevent']) >= 0) characteristic.ServiceLabelIndex = 3;
-                        else if ([4001, 4002, 4004, 4005, 4006, 4010].indexOf(state['buttonevent']) >= 0) characteristic.ServiceLabelIndex = 4;
-                        else if ([5001, 5002, 5004, 5005, 5006, 5010].indexOf(state['buttonevent']) >= 0) characteristic.ServiceLabelIndex = 5;
-                    }
-                   
-                    if (state['bri'] !== undefined) {
-                        characteristic.Brightness = state['bri'] / 2.55;
-                        if (no_reponse) characteristic.Brightness = "NO_RESPONSE";
-                    }
-    
                     if (state['ct'] !== undefined) {
                         characteristic.ColorTemperature = state['ct'];
                         if (state['ct'] < 140) characteristic.ColorTemperature = 140;
