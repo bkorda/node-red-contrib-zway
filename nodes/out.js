@@ -116,6 +116,12 @@ module.exports = function(RED) {
                                     var values = payload.split(',');
                                     command = 'exact?' + 'r=' + parseInt(values[0]) + '&g=' + parseInt(values[1]) + '&b=' + parseInt(values[1]);
                                     break;
+									
+								case 'thermostat':
+									command = 'exact?level=' + parseFloat(payload);
+									break;
+								
+									
                                 default: {
                                     break;
                                 }
