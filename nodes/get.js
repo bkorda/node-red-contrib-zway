@@ -62,10 +62,10 @@ module.exports = function(RED) {
                                 text: "node-red-contrib-zway/get:status.received",
                             });
 
-                            node.send({
-                                payload: node.meta.metrics,
-                                meta:deviceMeta,
-                            });
+                            message.payload = node.meta.metrics;
+                            message.meta = deviceMeta
+
+                            node.send(message);
                         }
 
                         node.cleanTimer = setTimeout(function(){

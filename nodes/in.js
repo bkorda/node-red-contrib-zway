@@ -71,7 +71,7 @@ module.exports = function(RED) {
                 device = message;
             }
 
-            if (device.metrics.isFailed) {
+            if (device === undefined || device.metrics.isFailed) {
                 node.status({
                     fill: "red",
                     shape: "dot",
@@ -86,7 +86,7 @@ module.exports = function(RED) {
             }
             
 
-            if (device.metrics !== undefined) {
+            if (device !== undefined && device.metrics !== undefined) {
                 if (node.oldLevel === undefined && device.metrics.level) { node.oldLevel = device.metrics.level; }
                 if (node.prevUpdateTime === undefined && device.updateTime) { node.prevUpdateTime = device.updateTime; }
             } else {
@@ -100,6 +100,9 @@ module.exports = function(RED) {
         sendMetrics(device, force=false) {
             var node = this;
             var device = node.updateState(device);
+            if (device === undefined) {
+                return;
+            }
             //filter output
             if (!force && 'onchange' === node.config.output && device.metrics.level === node.oldState) return;
             if (!force && 'onupdate' === node.config.output && device.updateTime === node.prevUpdateTime) return;
@@ -207,7 +210,7 @@ module.exports = function(RED) {
                                         device.probeType === 'alarm_door'  ||
                                         device.probeType === 'alarmSensor_door') {
 
-                                characteristic.ContactSensorState = state.level === 'off' ? 1 : 0;
+                                characteristic.ContactSensorState = state.level === 'on' ? 1 : 0;
                                 if (no_reponse) characteristic.ContactSensorState = "NO_RESPONSE";
                             } else if (device.probeType === 'smoke'       ||
                                         device.probeType === 'alarm_smoke' ||
