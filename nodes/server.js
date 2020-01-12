@@ -183,6 +183,9 @@ module.exports = function(RED) {
             for (var nodeId in this.devices) {
                 var itemID = this.devices[nodeId];
                 var node = RED.nodes.getNode(nodeId);
+                if (node === undefined) {
+                    continue
+                }
 
                 if (dataParsed.source === itemID) {
                     if (node && "server" in node) {

@@ -114,7 +114,7 @@ module.exports = function(RED) {
 
                                 case 'rgb':
                                     var values = payload.split(',');
-                                    command = 'exact?' + 'r=' + parseInt(values[0]) + '&g=' + parseInt(values[1]) + '&b=' + parseInt(values[1]);
+                                    command = 'exact?' + 'r=' + parseInt(values[0]) + '&g=' + parseInt(values[1]) + '&b=' + parseInt(values[2]);
                                     break;
 									
 								case 'thermostat':

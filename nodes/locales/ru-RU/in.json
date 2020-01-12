@@ -1,6 +1,7 @@
 {
     "label": {
         "name": "Название",
+        "topic" : "Topic",
         "server": "Сервер",
         "device": "Устройство",
         "state": "Статус",

@@ -8,6 +8,10 @@
         <input type="text" id="node-input-name" data-i18n="[placeholder]placeholder.name">
     </div>
     <div class="form-row">
+        <label for="node-input-topic" class="l-width"><i class="fa fa-tasks"></i> <span data-i18n="label.topic"></span></label>
+        <input type="text" id="node-input-topic">
+    </div>
+    <div class="form-row">
         <label for="node-input-server" class="l-width"><i class="fa fa-globe"></i> <span data-i18n="label.server"></span></label>
         <input type="text" id="node-input-server">
     </div>
@@ -52,6 +56,9 @@
         color: '#f6f6f6',
         defaults: {
             name: {
+                value: ""
+            },
+            topic : {
                 value: ""
             },
             server: {

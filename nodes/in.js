@@ -112,6 +112,7 @@ module.exports = function(RED) {
                 {
                     payload: (node.config.state in device.metrics) ? device.metrics.level : device.metrics,
                     payload_raw: device,
+                    topic: node.config.topic,
                     meta: node.server.getDevice(node.config.device)
                 },
                 node.formatHomeKit(device)

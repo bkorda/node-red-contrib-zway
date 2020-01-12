@@ -4,6 +4,7 @@
     <h3>Настройки</h3>
     <dl class="message-properties">
         <dt class="optional">Название <span class="property-type">string</span></dt><dd>Указать свое название или оставить пустым.</dd>
+        <dt class="optional">Topic <span class="property-type">string</span></dt><dd>Topic для сообщения. Можно оставить пустым.</dd>
         <dt>Сервер <span class="property-type">object</span></dt><dd>Выбрать zway сервер.</dd>
         <dt>Устройство <span class="property-type">string</span></dt><dd>Устройство с которым будет работать нода.</dd>
         <dt class="optional">Вывод <span class="property-type">string</span></dt>
@@ -19,6 +20,7 @@
     <h5>Выход 1: Данные</h5>
     <dl class="message-properties">
         <dt>payload <span class="property-type">string / object</span></dt><dd>Полное сообщение.</dd>
+        <dt>topic <span class="property-type">string</span></dt><dd>Необязательное поле, конфигурирется в ноде.</dd>
         <dt>payload_raw<span class="property-type">object</span></dt><dd>Все данные, которые приходят от zway.</dd>
         <dt>meta<span class="property-type">object</span></dt><dd>Все данные по устройству.</dd>
     </dl>
