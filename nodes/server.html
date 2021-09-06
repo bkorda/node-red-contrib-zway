@@ -14,12 +14,8 @@
         <input type="text" id="node-config-input-port">
     </div> -->
     <div class="form-row">
-        <label for="node-config-input-login" class="l-width"><i class="icon-lock"></i> User </span></label>
-        <input type="text" id="node-config-input-login">
-    </div>
-    <div class="form-row">
-        <label for="node-config-input-pass" class="l-width"><i class="icon-lock"></i> Password</span></label>
-        <input type="password" id="node-config-input-pass">
+        <label for="node-config-input-authToken" class="l-width"><i class="icon-lock"></i> Z-Way authorization token </span></label>
+        <input type="text" id="node-config-input-authToken">
     </div>
     <!-- <div class="form-row">
         <label for="node-config-input-secure" class="l-width"><i class="icon-tag"></i> SSL</label>
@@ -45,14 +41,10 @@
                 required: true,
                 validate:RED.validators.number()
             },
-            login: {
+            autToken: {
                 value: null,
                 required: true
             },
-            pass: {
-                value: null,
-                required: true
-            }
             // secure: {
             //     value: false,
             //     required: true
