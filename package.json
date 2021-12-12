@@ -7,7 +7,7 @@
     "url": "https://github.com/bkorda/node-red-contrib-zway/issues/"
   },
   "dependencies": {
-    "multiple-select": "^1.4.1",
+    "multiple-select": "^1.5.2",
     "request": "latest",
     "ws": "latest",
     "events": "latest"

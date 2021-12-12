@@ -23,7 +23,7 @@ module.exports = function(RED) {
             node.refreshDiscoverInterval = 15000;
 
             node.socket = new ZWaySocket({
-                authToken: this.autToken,
+                authToken: this.authToken,
                 hostname: this.ip,
                 secure: this.secure
             });
