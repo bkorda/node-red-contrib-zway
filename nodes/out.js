@@ -225,7 +225,7 @@ module.exports = function(RED) {
                         node.status({}); //clean
                     }, 3000);
                 }
-            }).auth(node.server.login, node.server.pass);
+            }).auth(null, null, true, node.server.authToken);
         }
 
         formatHomeKit(message, payload) {

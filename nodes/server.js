@@ -14,8 +14,7 @@ module.exports = function(RED) {
             node.name = n.name;
             node.ip = n.ip;
             node.port = 8083;
-            node.login = n.login;
-            node.pass = n.pass;
+            node.authToken = n.authToken;
             node.secure = n.secure || false;
             node.devices = {};
 
@@ -24,6 +23,7 @@ module.exports = function(RED) {
             node.refreshDiscoverInterval = 15000;
 
             node.socket = new ZWaySocket({
+                authToken: this.authToken,
                 hostname: this.ip,
                 secure: this.secure
             });
@@ -86,7 +86,7 @@ module.exports = function(RED) {
                     node.discoverProcess = false;
                     callback(node.items);
                     return node.items;
-                }).auth(node.login, node.pass);
+                }).auth(null, null, true, node.authToken);
             } else {
                 node.log('discoverDevices: Using cached devices');
                 callback(node.items);
