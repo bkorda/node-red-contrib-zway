@@ -164,9 +164,9 @@ module.exports = function(RED) {
                         case 'switchBinary':
                             if (device.probeType === 'thermostat_mode') {
                                 if (node.config.thermostat === 'cooling') {
-                                    payload.TargetHeatingCoolingState = state.level === 'off' ? 0 : 2
+                                    characteristic.TargetHeatingCoolingState = state.level === 'off' ? 0 : 2
                                 } else if (node.config.thermostat === 'heating') {
-                                    payload.TargetHeatingCoolingState = state.level === 'off' ? 0 : 1
+                                    characteristic.TargetHeatingCoolingState = state.level === 'off' ? 0 : 1
                                 }
                             } else {
                                 characteristic.On = state.level === 'on';
